@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+    <head>
+        <title>test</title>
+		<style>
+			#follower, #sub, #tier, #bit, #amt, #don, #qua {width: 0px; height: 0px;}
+			#content {font-family: Jazz LET, fantasy; font-size: 32px; color: white;}
+			img {width: 40px; height: 40px;}
+			body {background-color: #000000;}
+		</style>
+    </head>
+    <body>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="http://ssj4justdale.ddns.net:3000/socket.io/socket.io.js"></script>
+        <script type="text/javascript">
+            var socket = io('ws://ssj4justdale.ddns.net:3000/');
+
+            socket.on('updateAll', function (follow, sub, tier, bit, amt, don, qua) {
+                console.log(follow + " // " + sub + " // " + tier + " // " + bit + " // " + bit + " // " + don + " // " + qua);
+                //$('body').css('background', color);
+				$('#follower').text(follow);
+				$('#sub').text(sub);
+				$('#tier').text(tier);
+				$('#bit').text(bit);
+				$('#amt').text(amt);
+				$('#don').text(don);
+				$('#qua').text(qua);
+				
+            });
+			socket.emit('update', 'test');
+        </script>
+		
+		<script src = "./test.js"></script>
+
+        <!-- <button id="button">Button</button> -->
+		<center>
+			<div id="follower">T</div>
+			<div id="sub">E</div>
+			<div id="tier">S</div>
+			<div id="bit">T</div>
+			<div id="amt">I</div>
+			<div id="don">N</div>
+			<div id="qua">G</div>
+			<div id="content"></div>
+		</center>
+		
+    </body>
+</html>
