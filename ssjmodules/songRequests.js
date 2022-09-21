@@ -41,13 +41,13 @@ module.exports.registerTwitchEvents = (async function(twitch) {
 		let messageToLower = message.toLowerCase();
 		let isSub = tags.subscriber;
 		let isMod = tags.mod;
-		let isBroadcaster = tags.badges.broadcaster;
+		let isBroadcaster = channel.toLowerCase();
+		let myUser = "#" + tags.username.toLowerCase();
 		
 		let spotifyUrl = parseActualSongUrlFromBigMessage(message);
 		
-		if(isMod === false && isBroadcaster === null) {  //not mod, we want to investigate
-
-			if(message.search('http') != -1 || message.search('www') != -1 || message.search('.com') != -1 || message.search('.net') != -1 || message.search('.org') != -1) { //posts a link
+		if(isMod === false && isBroadcaster !== myUser) {  //not mod, we want to investigate
+			if(message.search('http://') != -1 || message.search('www.') != -1 || message.search('https://') != -1) { //posts a link
 				if(isSub === false || (isSub === true && spotifyUrl === null)) { //isnt a sub or if is a sub and link isnt a spotify url
 					twitch.say(channel, "/timeout @" + tags.username + " 5"); //timeout the person who did a link who isnt modded
 					twitch.say(channel, "Please refain from posting links, @" + tags.username);
@@ -66,7 +66,7 @@ module.exports.registerTwitchEvents = (async function(twitch) {
 			}
 		}
 		
-		if(isMod === true || isBroadcaster === '1') {
+		if(isMod === true || isBroadcaster === myUser) {
 			if(messageToLower == chatbotConfig.song_requests_toggle_enable_command) {
 				song_requests_enabled = !song_requests_enabled;
 				if(song_requests_enabled === true) {
