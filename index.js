@@ -5,6 +5,7 @@ const cheerio = require('cheerio');
 const modulePlayerQueue = require('./ssjmodules/playerQueues');
 const moduleStreamOverlay = require('./ssjmodules/streamOverlay');
 const moduleSongRequests = require('./ssjmodules/songRequests');
+const moduleRandomDaleShit = require('./ssjmodules/randomDaleShit.js');
 
 moduleStreamOverlay.instantiate();
 
@@ -32,6 +33,8 @@ moduleStreamOverlay.instantiate();
 	client.on('message', async (channel, tags, message, self) => {
 		// Ignore echoed messages.
 		if(self) return;
+		let messageToLower = message.toLowerCase();
+		let cmdExec = messageToLower.split(" ")[0];
 		
 		if(message.toLowerCase() === "!coinflip"){
 			let num = Math.random();
@@ -65,9 +68,7 @@ moduleStreamOverlay.instantiate();
 					client.say(channel, '@' + tags.username + ' has joined the queue');
 					modulePlayerQueue.joinQueue(tags.username);
 				}
-			}
-			
-			if(message.toLowerCase() === modulePlayerQueue.leaveCommand){
+			} else if(message.toLowerCase() === modulePlayerQueue.leaveCommand){
 				let myQ = modulePlayerQueue.getList()
 				if(myQ.indexOf(tags.username) == -1) {
 					client.say(channel, '@' + tags.username + ', you are not in the queue');
@@ -75,11 +76,17 @@ moduleStreamOverlay.instantiate();
 					client.say(channel, '@' + tags.username + ' has left the queue');
 					modulePlayerQueue.leaveQueue(tags.username);
 				}
-			}
-			
-			if(message.toLowerCase() === modulePlayerQueue.queueCommand){
+			} else if(message.toLowerCase() === modulePlayerQueue.queueCommand){
 				let myQ = modulePlayerQueue.getListText()
 				client.say(channel, 'Current Players in Queue: ' + myQ);
+			}
+		}
+		
+		if(moduleRandomDaleShit) {
+			
+			if(moduleRandomDaleShit.rollDiceCommand.includes(cmdExec)) {
+				let msg = moduleRandomDaleShit.rollDice( moduleRandomDaleShit.getArgument(message.toLowerCase()) );
+				client.say(channel, "/me " + tags.username + " " + msg);
 			}
 		}
 		
