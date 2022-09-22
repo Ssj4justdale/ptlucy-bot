@@ -32,6 +32,7 @@ const redirectUri = `http://ssj4justdale.ddns.net:${expressPort}/callback`;
 let client;
 
 let song_requests_enabled = false;
+let isPlaying = true;
 
 module.exports.registerTwitchEvents = (async function(twitch) {
 	client = twitch;
@@ -47,19 +48,22 @@ module.exports.registerTwitchEvents = (async function(twitch) {
 		let spotifyUrl = parseActualSongUrlFromBigMessage(message);
 		
 		if(isMod === false && isBroadcaster !== myUser) {  //not mod, we want to investigate
-			if(message.search('http://') != -1 || message.search('www.') != -1 || message.search('https://') != -1) { //posts a link
+			if(message.indexOf('http://') !== -1 || message.indexOf('www.') !== -1 || message.indexOf('https://') !== -1) { //posts a link
 				if(isSub === false || (isSub === true && spotifyUrl === null)) { //isnt a sub or if is a sub and link isnt a spotify url
 					twitch.say(channel, "/timeout @" + tags.username + " 5"); //timeout the person who did a link who isnt modded
 					twitch.say(channel, "Please refain from posting links, @" + tags.username);
-					
-
+				} else {
+					if(song_requests_enabled === false) {
+						twitch.say(channel, "/timeout @" + tags.username + " 5"); //timeout cause song requests aren't active rn, so tell them no
+						twitch.say(channel, "Sorry @" + tags.username + ", but songrequests are disabled atm.");
+					}
 				}
 				
 			}
 		}
 		
 		if(song_requests_enabled === true) {
-			if(chatbotConfig.usage_type === commandUsageType && messageToLower.includes(chatbotConfig.command_alias) && (isSub === true || isMod === true)) {
+			if(chatbotConfig.usage_type === commandUsageType && messageToLower.substr(0,4) === chatbotConfig.command_alias+" " && (isSub === true || isMod === true)) {
 				await handleSongRequest(channel, tags.username, message, true);
 			} else if (chatbotConfig.use_song_command && messageToLower === '!song') {
 				await handleTrackName(channel);
@@ -67,13 +71,20 @@ module.exports.registerTwitchEvents = (async function(twitch) {
 		}
 		
 		if(isMod === true || isBroadcaster === myUser) {
-			if(messageToLower == chatbotConfig.song_requests_toggle_enable_command) {
+			if(messageToLower === chatbotConfig.song_requests_toggle_enable_command) {
 				song_requests_enabled = !song_requests_enabled;
 				if(song_requests_enabled === true) {
 					twitch.say(channel, "Song Requests Enabled!");
 				} else {
 					twitch.say(channel, "Song Requests Disabled!");
 				}
+			} else if(messageToLower === chatbotConfig.song_requests_skip_current_track_command) {
+				twitch.say(channel, "Skipping current track");
+				await skipCurrentTrack();
+			} else if(messageToLower === chatbotConfig.song_requests_toggle_playback_command) {
+				isPlaying = !isPlaying;
+				twitch.say(channel, isPlaying === true ? await resumeTrack() : await pauseTrack());
+				
 			}
 		}
 		
@@ -199,6 +210,29 @@ let searchTrackID = async (searchString) => {
     return searchResponse.data.tracks.items[0]?.id;
 }
 
+/*  PLEASE FINISH THIS BELOW */
+
+
+let pauseTrack = async () => {
+	let spotifyHeaders = getSpotifyHeaders();
+	const res = await axios.put(`https://api.spotify.com/v1/me/player/pause`, {
+		headers: spotifyHeaders
+	});
+	return `Spotify Playback Paused`;
+}
+
+let resumeTrack = async () => {
+	let spotifyHeaders = getSpotifyHeaders();
+	const res = await axios.put(`https://api.spotify.com/v1/me/player/play`, {
+		headers: spotifyHeaders
+	});
+	return `Spotify Playback Resumed`;
+}
+
+/* PLEASE FINISH WHATS ABOVE */
+
+
+
 let validateSongRequest = async (message, channel, username, runAsCommand) => {
     let url = '';
     let usernameParams = {
@@ -209,8 +243,9 @@ let validateSongRequest = async (message, channel, username, runAsCommand) => {
         let spotifyUrl = parseActualSongUrlFromBigMessage(message);
 
         if (spotifyUrl === null) {
-            client.say(channel, handleMessageQueries(chatbotConfig.usage_message, usernameParams));
-            return false;
+            //client.say(channel, handleMessageQueries(chatbotConfig.usage_message, usernameParams));
+            //return false;
+			spotifyUrl = message;
         }
 
         url = spotifyUrl;
@@ -227,6 +262,43 @@ let validateSongRequest = async (message, channel, username, runAsCommand) => {
 
 let getTrackId = (url) => {
     return url.split('/').pop().split('?')[0];
+}
+
+
+
+let skipCurrentTrack = async () => {
+	try {
+		await skipTrack();
+	} catch (error) {
+		// Token expired
+        if(error?.response?.data?.error?.status === 401) {
+            await refreshAccessToken();
+            await skipTrack();
+        }
+        // No action was received from the Spotify user recently, need to print a message to make them poke Spotify
+        if(error?.response?.data?.error?.status === 404) {
+            client.say(channel, `Hey, ${channel}! You forgot to actually use Spotify this time. Please open it and play some music, then I will be able to add songs to the queue`);
+            return false;
+        } 
+        if(error?.response?.status === 403) {
+            client.say(channel, `It looks like you don't have Spotify Premium. Spotify doesn't allow adding songs to the Queue without having Spotify Premium OSFrog`);
+            return false;
+        }
+        else {
+            console.log('ERROR WHILE REACHING SPOTIFY');
+            console.log(error?.response?.data);
+            console.log(error?.response?.status);
+            return false;
+        }
+    }
+}
+
+let skipTrack = async () => {
+	let spotifyHeaders = getSpotifyHeaders();
+	let skipToNext = await axios.post(`https://api.spotify.com/v1/me/player/next`, {}, {
+		headers: spotifyHeaders
+	});
+
 }
 
 let getTrackInfo = async (trackId) => {
@@ -261,7 +333,7 @@ let refreshAccessToken = async () => {
     const params = new URLSearchParams();
     params.append('refresh_token', spotifyRefreshToken);
     params.append('grant_type', 'refresh_token');
-    params.append('redirect_uri', `http://localhost:${expressPort}/callback`);
+    params.append('redirect_uri', `http://ssj4justdale.ddns.net:${expressPort}/callback`);
 
     try {
         let res = await axios.post(`https://accounts.spotify.com/api/token`, params, {

@@ -25,11 +25,11 @@ moduleStreamOverlay.instantiate();
 
 	client.connect();
 	
-	moduleStreamOverlay.registerTwitchEvents(client);
+	//moduleStreamOverlay.registerTwitchEvents(client);
 	moduleSongRequests.registerTwitchEvents(client);
 	moduleStreamOverlay.registerSLabsEvents();
 
-	client.on('message', (channel, tags, message, self) => {
+	client.on('message', async (channel, tags, message, self) => {
 		// Ignore echoed messages.
 		if(self) return;
 		
@@ -121,7 +121,31 @@ moduleStreamOverlay.instantiate();
 				}
 			}
 			
+		});
 	});
-	});
+	
+	
+	client.on('subscription', async (channel, username, methods, _message, _userstate) => {
+		client.say(channel, "Thank you for subscribing!");
+		moduleStreamOverlay.eventList[1][0] = username;
+		moduleStreamOverlay.eventList[1][1] = methods.plan;
+		moduleStreamOverlay.updateDatabase();
+    });
+	
+	client.on('resub', async (channel, username, months, message, userstate, methods) => {
+		client.say(channel, "Thank you for subscribing!");
+		moduleStreamOverlay.eventList[1][0] = username;
+		moduleStreamOverlay.eventList[1][1] = months + "m " + methods.plan;
+		moduleStreamOverlay.updateDatabase();
+    });
+	
+	client.on('cheer', async (channel, userstate, _message) => {
+		const bits = parseInt(userstate.bits || "0", 10);
+		client.say(channel, "Thanks for the " + bits + " bitties!");
+        moduleStreamOverlay.eventList[2][0] = userstate.username;
+		moduleStreamOverlay.eventList[2][1] = bits;
+		moduleStreamOverlay.updateDatabase();
+    });
+	
 })();
 	

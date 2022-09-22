@@ -65,6 +65,7 @@ module.exports.instantiate = function() {
 	console.log("SLABS Debug Enabled: " + SLDEBUG);
 }
 
+/*
 module.exports.registerTwitchEvents = function(twitch) {
 //	twitch.on('message', (channel, tags, message, self) => {
 //		// Ignore echoed messages.
@@ -97,7 +98,9 @@ module.exports.registerTwitchEvents = function(twitch) {
 		eventList[2][1] = bits;
 		updateDatabase();
     });
+
 }
+*/
 
 module.exports.registerSLabsEvents = function() {
 	console.log(`${SLtoken}`);
@@ -169,5 +172,8 @@ function updateDatabase() {
 	db.all('UPDATE data SET follower=?, subscriber=?, tier=?, bitter=?, quantity=?, donator=?, amount=? WHERE id="1"', [eventList[0], eventList[1][0], eventList[1][1], eventList[2][0], eventList[2][1], eventList[3][0], eventList[3][1]]);
 	myServer.emit('updateAll', eventList[0], eventList[1][0], eventList[1][1], eventList[2][0], eventList[2][1], eventList[3][0], eventList[3][1]);
 
-	
 }
+
+
+module.exports.updateDatabase = updateDatabase;
+module.exports.eventList = eventList;

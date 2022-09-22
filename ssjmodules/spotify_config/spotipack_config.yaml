@@ -12,7 +12,11 @@ use_song_command: FALSE # add !song command that displays currently playing song
 minimum_requred_bits: 1 # works if usage mode is set to "bits"
 spotify_client_id: "795570f584c84e26b6cab28ca104f681"
 spotify_client_secret: "137b8912664f418a9db61da0885a7f18"
-song_requests_toggle_enable_command: "!togglesr"
+song_requests_toggle_enable_command: "!srtoggle"
+song_requests_skip_current_track_command: "!srskip"
+# song_requests_toggle_playback_command: "!srtogglepause"
+song_requests_toggle_playback_command: "!kjasdfjkfsdajihsdfayhu734ruifdsa8u943589utrfeij"
+
 
 # List of ENV variables required at the start:
 # SPOTIFY_CLIENT_ID

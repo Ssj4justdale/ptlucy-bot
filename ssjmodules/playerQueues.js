@@ -23,7 +23,7 @@ module.exports.leaveQueue = function(player) {
 }
 
 module.exports.getListText = function() {
-	return player_queue.toString();
+	return player_queue.toString().replaceAll(',', ', ');
 }
 
 module.exports.getList = function () {
