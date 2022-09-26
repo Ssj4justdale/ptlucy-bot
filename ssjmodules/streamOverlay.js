@@ -52,6 +52,12 @@ module.exports.instantiate = function() {
 			socket.emit('updateAll', eventList[0], eventList[1][0], eventList[1][1], eventList[2][0], eventList[2][1], eventList[3][0], eventList[3][1]);
 		});
 		
+		socket.on('scare', function (color) {
+			//console.log(eventList.toString());
+			socket.broadcast.emit('scareAll', '');
+			socket.emit('scareAll', '');
+		});
+		
 		socket.broadcast.emit('updateAll', eventList[0], eventList[1][0], eventList[1][1], eventList[2][0], eventList[2][1], eventList[3][0], eventList[3][1]);
 		socket.emit('updateAll', eventList[0], eventList[1][0], eventList[1][1], eventList[2][0], eventList[2][1], eventList[3][0], eventList[3][1]);
 	});

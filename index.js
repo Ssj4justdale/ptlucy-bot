@@ -36,6 +36,11 @@ moduleStreamOverlay.instantiate();
 		let messageToLower = message.toLowerCase();
 		let cmdExec = messageToLower.split(" ")[0];
 		
+		if(message === '@ssj4justdale -> The command "!horny" has been edited successfully.'){
+			client.say(channel, "---------------------");
+			client.say(channel, 'Finished resetting "!horny"');
+		}
+		
 		if(message.toLowerCase() === "!coinflip"){
 			let num = Math.random();
 			let cF = "";
@@ -103,21 +108,13 @@ moduleStreamOverlay.instantiate();
 						lastOffline = true;
 					}
 					if(ranCommand == false) {
-						if(message == "!horny") {
-							client.say(channel, `!commands edit !horny -c=1`);
-						} else {
-							client.say(channel, `!commands edit !horny -c=0`);
-						}
+						resetHorny(client, channel, (message === "!horny"));
 						ranCommand = true;
 					}
 				} else {
 					if(ranThisStream == false) {
 						if(ranCommand == false) {
-							if(message == "!horny") {
-								client.say(channel, `!commands edit !horny -c=1`);
-							} else {
-								client.say(channel, `!commands edit !horny -c=0`);
-							}
+							resetHorny(client, channel, (message === "!horny"));
 							ranCommand = true;
 						}
 						
@@ -155,4 +152,14 @@ moduleStreamOverlay.instantiate();
     });
 	
 })();
+
+function resetHorny(twitch, channel, defaultHorny) {
+	if(defaultHorny === null || defaultHorny === false) {
+		defaultHorny = '0';
+	} else {defaultHorny = '1';}
+	
+	twitch.say(channel, 'Resetting "!horny"...');
+	twitch.say(channel, "---------------------");
+	twitch.say(channel, `!commands edit !horny -c=` + defaultHorny);
+}
 	

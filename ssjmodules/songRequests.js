@@ -200,15 +200,27 @@ let addValidatedSongToQueue = async (songId, channel) => {
     return true;
 }
 
-// Thanks AdamMcD94
+// FIX LINE 213 to 216 if errors persists!
 let searchTrackID = async (searchString) => {
     let spotifyHeaders = getSpotifyHeaders();
     searchString = encodeURIComponent(searchString);
-    const searchResponse = await axios.get(`https://api.spotify.com/v1/search?q=${searchString}&type=track`, {
-        headers: spotifyHeaders
-    });
+	let searchResponse;
+	try {
+		searchResponse = await axios.get(`https://api.spotify.com/v1/search?q=${searchString}&type=track`, {
+			headers: spotifyHeaders
+		});
+	} catch(error) {
+		if(error?.response?.data?.error?.status === 401) {
+			await refreshAccessToken();
+			return await searchTrackID(searchString);
+		} else {
+			client.say(chatbotConfig.channel_name, "Spotify OUATH is fucked up, fix it Austin...");
+			return false;
+		}
+	}
     return searchResponse.data.tracks.items[0]?.id;
 }
+
 
 /*  PLEASE FINISH THIS BELOW */
 
