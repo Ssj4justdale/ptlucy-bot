@@ -1,4 +1,7 @@
+let playlistWheelList = ["Casual", "Ranked", "Dropshot", "Rumble", "Snowday"];
+
 module.exports.rollDiceCommand = ["!roll", "!r"];
+module.exports.playlistWheelCommand = ["!gamewheel", "!gw"];
 
 module.exports.getArgument = function(message) { 
 	return message.split(" ")[1];
@@ -28,4 +31,9 @@ module.exports.rollDice = function(command) {
 	return "please follow this format: 1d6";
 	
 	
+}
+
+module.exports.playlistWheel = function(command) {
+	let choice = playlistWheelList[Math.floor(Math.random() * playlistWheelList.length)];
+	return "You are now set to queue " + choice;
 }

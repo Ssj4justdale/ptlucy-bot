@@ -6,6 +6,7 @@ const modulePlayerQueue = require('./ssjmodules/playerQueues');
 const moduleStreamOverlay = require('./ssjmodules/streamOverlay');
 const moduleSongRequests = require('./ssjmodules/songRequests');
 const moduleRandomDaleShit = require('./ssjmodules/randomDaleShit.js');
+const moduleAltRanks = require('./ssjmodules/altRanks.js');
 
 moduleStreamOverlay.instantiate();
 
@@ -64,6 +65,15 @@ moduleStreamOverlay.instantiate();
 			client.say(channel, "Coin flipped and returned " + cF);
 		}
 		
+		if(message.toLowerCase() === "!age"){
+			let dob = new Date("06/08/2001");
+			let month_diff = Date.now() - dob.getTime();
+			let age_dt = new Date(month_diff); 
+			let year = age_dt.getUTCFullYear();
+			let age = Math.abs(year - 1970);
+			client.say(channel, age.toString());
+		}
+		
 		if(modulePlayerQueue) {
 			if(message.toLowerCase() === modulePlayerQueue.joinCommand){
 				let myQ = modulePlayerQueue.getList()
@@ -92,6 +102,9 @@ moduleStreamOverlay.instantiate();
 			if(moduleRandomDaleShit.rollDiceCommand.includes(cmdExec)) {
 				let msg = moduleRandomDaleShit.rollDice( moduleRandomDaleShit.getArgument(message.toLowerCase()) );
 				client.say(channel, "/me " + tags.username + " " + msg);
+			} else if(moduleRandomDaleShit.playlistWheelCommand .includes(cmdExec)){
+				let msg = moduleRandomDaleShit.playlistWheel();
+				client.say(channel, msg);
 			}
 		}
 		
