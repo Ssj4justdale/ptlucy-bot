@@ -18,7 +18,6 @@ let myServer;
 let SLDEBUG = false;
 
 const db = new sqlite3.Database('./data.db');
-//const SLtoken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbiI6IkQ4RjMyRjg5NzhCNDA0OTk2RjYzIiwicmVhZF9vbmx5Ijp0cnVlLCJwcmV2ZW50X21hc3RlciI6dHJ1ZSwidHdpdGNoX2lkIjoiMjkxNTk2MDciLCJ5b3V0dWJlX2lkIjoiVUNxQmk0aFhvbU1zSFJJWWVNZFlnaS1BIn0.jDULbB_1N0bNYcIQ7GPtHZRzpXBH33PLt5MWeDFadLY";
 const SLtoken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbiI6IkU0ODM1MzU2OUUxMDlDQTIzNkM5IiwicmVhZF9vbmx5Ijp0cnVlLCJwcmV2ZW50X21hc3RlciI6dHJ1ZSwidHdpdGNoX2lkIjoiMjE1OTU5OTk3In0.W-kk9rrdBSfABe9rlVg33fqwgenwZwqTgDIYei93JW0";
 
 module.exports.instantiate = function() {

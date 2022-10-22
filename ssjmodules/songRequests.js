@@ -4,8 +4,7 @@ const fs = require('fs');
 const YAML = require('yaml');
 
 const tmi = require('tmi.js');
-const axios = require('axios').default;
-
+const axios = require('axios');
 const open = require('open');
 
 let spotifyRefreshToken = '';
@@ -399,7 +398,7 @@ app.get('/callback', async (req, res) => {
         }
     };
 
-    let tokenResponse = await axios.post('https://accounts.spotify.com/api/token', params, config);
+    let tokenResponse = await axios.post(`https://accounts.spotify.com/api/token`, params, config).then(console.log("Success"));
 
     if (!tokenResponse.statusCode === 200) {
         // Print error
