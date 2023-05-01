@@ -5,23 +5,17 @@ const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 puppeteer.use(StealthPlugin());
 
 let steams_acts = ['domandmatt', 'arglow0726', 'rafaelmartins12345', 'dominic_capobianco'];
-let epics_acts = ['LP-HybridTheory', 'JonSandmanRL', 'EverlitSpotify', 'SpotifyEverlit', 'EverlitOnSpotify', 'SmurfAlt001'];
+let epics_acts = ['LP-HybridTheory', 'JonSandmanRL', 'EverlitSpotify', 'SpotifyEverlit', 'EverlitOnSpotify', 'SmurfAlt001', 'SmurfAlt002', 'SmurfAlt003', 'OfficerKat',
+				  'M0nk4yM00N'];
 
 let steams = steams_acts.sort((a, b) => a.localeCompare(b));
 let epics = epics_acts.sort((a, b) => a.localeCompare(b));
 
-  
 (async () => {
   
-	//create the server
 	const server = http.createServer(async (req, res) => {
-	  
-	// 200 is the status code which means
-	// All OK and the second argument is
-	// the object of response header.
 		res.writeHead(200, {'Content-Type': 'text/html'}); 
 		
-		//res.write("<html><head><title>Alts-Ranks</title><style>#MyTable{border: 1px solid black;}; #MyTable td{border: 1px solid black; padding: 3px;}; .parentCell{position: relative;}.tooltip{display: none; position: absolute; z-index: 100; border: 1px; background-color: white;  border: 1px solid green; padding: 3px; color: green; top: 20px; left: 20px;}; .parentCell:hover span.tooltip{display:block;}; </style></head>"); 
 		res.write('<head> \
 			<title> \
 				Alt-Ranks\
@@ -121,56 +115,11 @@ let epics = epics_acts.sort((a, b) => a.localeCompare(b));
 		}
 		
 		res.write("</table></center></body></html>")
-		/*
-		while(true) {
-			await sleep(90000);
-			server.getConnections(async (error, count) => {
-				if(count >= 1) {
-					let myScr = "";
-					for(let i = 0; i < steams.length; i++) {
-						let mR = await scrape("steam", steams[i]);
-						myScr = myScr + "document.getElementById(\"steam" + steams[i] + "0\").innerHTML = '" + await imgSRC(mR[3][0]) + mR[0][0].toString() + '<span class = \"tooltip\">' + mR[1][0] + "</span>'; " +
-						"document.getElementById(\"steam" + steams[i] + "1\").innerHTML = '" + await imgSRC(mR[3][1]) + mR[0][1].toString() + '<span class = \"tooltip\">' + mR[1][1] + "</span>'; " +
-						"document.getElementById(\"steam" + steams[i] + "2\").innerHTML = '" + await imgSRC(mR[3][2]) + mR[0][2].toString() + '<span class = \"tooltip\">' + mR[1][2] + "</span>'; " +
-						"document.getElementById(\"steam" + steams[i] + "3\").innerHTML = '" + await imgSRC(mR[3][3]) + mR[0][3].toString() + '<span class = \"tooltip\">' + mR[1][3] + "</span>'; " +
-						"document.getElementById(\"steam" + steams[i] + "4\").innerHTML = '" + await imgSRC(mR[3][4]) + mR[0][4].toString() + '<span class = \"tooltip\">' + mR[1][4] + "</span>'; " +
-						"document.getElementById(\"steam" + steams[i] + "5\").innerHTML = '" + await imgSRC(mR[3][5]) + mR[0][5].toString() + '<span class = \"tooltip\">' + mR[1][5] + "</span>'; " +
-						"document.getElementById(\"steam" + steams[i] + "6\").innerHTML = '" + await imgSRC(mR[3][6]) + mR[0][6].toString() + '<span class = \"tooltip\">' + mR[1][6] + "</span>'; " +
-						"document.getElementById(\"steam" + steams[i] + "7\").innerHTML = '" + await imgSRC(mR[3][7]) + mR[0][7].toString() + '<span class = \"tooltip\">' + mR[1][7] + "</span>'; " +
-						"document.getElementById(\"steam" + steams[i] + "8\").innerHTML = '" + await imgSRC(mR[3][8]) + mR[0][8].toString() + '<span class = \"tooltip\">' + mR[1][8] + "</span>'; " +
-						"document.getElementById(\"steam" + steams[i] + "9\").innerHTML = '" + await imgSRC(mR[4][1]) + mR[4][0].toString() + '<span class = \"tooltip\">' + mR[4][0] + "</span>'; " +
-						"document.getElementById(\"steam" + steams[i] + "10\").innerHTML = '" + mR[4][2].toString() + "/10 Wins TNL'; ";
-						
-					}
-					
-					for(let i = 0; i < epics.length; i++) {
-						let mR = await scrape("epic", epics[i]);
-						myScr = myScr + "document.getElementById(\"epic" + epics[i] + "0\").innerHTML = '" + await imgSRC(mR[3][0]) + mR[0][0].toString() + '<span class = \"tooltip\">' + mR[1][0] + "</span>'; " +
-						"document.getElementById(\"epic" + epics[i] + "1\").innerHTML = '" + await imgSRC(mR[3][1]) + mR[0][1].toString() + '<span class = \"tooltip\">' + mR[1][1] + "</span>'; " +
-						"document.getElementById(\"epic" + epics[i] + "2\").innerHTML = '" + await imgSRC(mR[3][2]) + mR[0][2].toString() + '<span class = \"tooltip\">' + mR[1][2] + "</span>'; " +
-						"document.getElementById(\"epic" + epics[i] + "3\").innerHTML = '" + await imgSRC(mR[3][3]) + mR[0][3].toString() + '<span class = \"tooltip\">' + mR[1][3] + "</span>'; " +
-						"document.getElementById(\"epic" + epics[i] + "4\").innerHTML = '" + await imgSRC(mR[3][4]) + mR[0][4].toString() + '<span class = \"tooltip\">' + mR[1][4] + "</span>'; " +
-						"document.getElementById(\"epic" + epics[i] + "5\").innerHTML = '" + await imgSRC(mR[3][5]) + mR[0][5].toString() + '<span class = \"tooltip\">' + mR[1][5] + "</span>'; " +
-						"document.getElementById(\"epic" + epics[i] + "6\").innerHTML = '" + await imgSRC(mR[3][6]) + mR[0][6].toString() + '<span class = \"tooltip\">' + mR[1][6] + "</span>'; " +
-						"document.getElementById(\"epic" + epics[i] + "7\").innerHTML = '" + await imgSRC(mR[3][7]) + mR[0][7].toString() + '<span class = \"tooltip\">' + mR[1][7] + "</span>'; " +
-						"document.getElementById(\"epic" + epics[i] + "8\").innerHTML = '" + await imgSRC(mR[3][8]) + mR[0][8].toString() + '<span class = \"tooltip\">' + mR[1][8] + "</span>'; " +
-						"document.getElementById(\"epic" + epics[i] + "9\").innerHTML = '" + await imgSRC(mR[4][1]) + mR[4][0].toString() + '<span class = \"tooltip\">' + mR[4][0] + "</span>'; " +
-						"document.getElementById(\"epic" + epics[i] + "10\").innerHTML = '" + mR[4][2].toString() + "/10 Wins TNL'; ";
-						
-					}
-				
-					res.write("<script>" + myScr + "</script>");
-				}
-			});
-			//await sleep(6000);
-			//res.write("<script>document.getElementById('test1').innerHTML = 'fuck';</script>");
-		}
-		*/
 		
 		res.end();
 	  
-	}).listen(8081); // Server object listens on port 8081
-
+	}).listen(8081);
+	
 	console.log('Node.js web server at port 8081 is running..')
 	
 
@@ -193,25 +142,15 @@ let epics = epics_acts.sort((a, b) => a.localeCompare(b));
 		});
 		const page = await browser.newPage();
 
-		   
-		//const bodyHTML = await page.evaluate(() => document.body.innerHTML);
-
-		//await page.goto('https://api.tracker.gg/api/v2/rocket-league/standard/profile/' + platform + '/' + username);
 		const myUrl = 'https://api.tracker.gg/api/v2/rocket-league/standard/profile/' + platform + '/' + username;
 		await page.goto(myUrl, { waitUntil: 'networkidle0' });
 
-		//I would leave this here as a fail safe
 		await page.content(); 
 
 		innerText = await page.evaluate(() =>  {
 			return JSON.stringify(JSON.parse(document.querySelector("body").innerText)); 
 		}); 
 		
-		//console.log("innerText now contains the JSON");
-		//console.log(innerText);
-		
-		
-
 		await browser.close(); 
 
 		if(innerText.search('"errors":') != -1){
@@ -220,8 +159,7 @@ let epics = epics_acts.sort((a, b) => a.localeCompare(b));
 		
 			let returnThis = await parseRanks(innerText);
 				
-			//return innerText.toString(); -- if you only want the json object text
-			return returnThis; //returns 2 arrays.
+			return returnThis; 
 		}
 	}
 

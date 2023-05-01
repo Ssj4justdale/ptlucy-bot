@@ -1,3 +1,5 @@
+//Kraken + Cheatingup COde: IH1VYO-W22TGR-SM4EW4
+
 const tmi = require('tmi.js');
 const request = require('request');
 const cheerio = require('cheerio');
@@ -7,6 +9,8 @@ const moduleStreamOverlay = require('./ssjmodules/streamOverlay');
 const moduleSongRequests = require('./ssjmodules/songRequests');
 const moduleRandomDaleShit = require('./ssjmodules/randomDaleShit.js');
 const moduleAltRanks = require('./ssjmodules/altRanks.js');
+
+const axios = require('axios');
 
 moduleStreamOverlay.instantiate();
 
@@ -175,4 +179,14 @@ function resetHorny(twitch, channel, defaultHorny) {
 	twitch.say(channel, "---------------------");
 	twitch.say(channel, `!commands edit !horny -c=` + defaultHorny);
 }
-	
+
+
+async function getViewers(twitchChannel) {
+	let myStream = await axios.get("http://tmi.twitch.tv/group/user/" + twitchChannel + "/chatters");
+	return myStream.data.chatter_count;
+}
+
+async function getChatters(twitchChannel) {
+	let myStream = await axios.get("http://tmi.twitch.tv/group/user/" + twitchChannel + "/chatters");
+	return [...myStream.data.chatters.moderators, ...myStream.data.chatters.vips, ...myStream.data.chatters.viewers];
+}
