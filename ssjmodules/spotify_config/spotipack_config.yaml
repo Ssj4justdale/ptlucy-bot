@@ -10,8 +10,8 @@ usage_type: "command" # can be either "channel_points", "command" or "bits"
 command_alias: "!sr" # can be switched to something custom like "!sr" for brevity
 use_song_command: FALSE # add !song command that displays currently playing song. FALSE if you don't want it
 minimum_requred_bits: 1 # works if usage mode is set to "bits"
-spotify_client_id: "795570f584c84e26b6cab28ca104f681"
-spotify_client_secret: "137b8912664f418a9db61da0885a7f18"
+spotify_client_id: ""
+spotify_client_secret: ""
 song_requests_toggle_enable_command: "!srtoggle"
 song_requests_skip_current_track_command: "!srskip"
 # song_requests_toggle_playback_command: "!srtogglepause"
