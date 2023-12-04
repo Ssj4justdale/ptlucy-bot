@@ -23,8 +23,8 @@ moduleStreamOverlay.instantiate();
 	const client = new tmi.Client({
 		options: { debug: true },
 		identity: {
-			username: 'ssj4justdale',
-			password: 'oauth:4zqngoxlwt9kqwy2h7srqc3zs8xfgd'
+			username: '',
+			password: 'oauth:'
 		},
 		channels: [ 'ptlucy' ]
 	});
